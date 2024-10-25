@@ -1,4 +1,3 @@
 # Error Overview for JS
 
-Error Types:
-    
+## Error Types:
