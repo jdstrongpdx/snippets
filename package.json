@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "jest": "^29.7.0"
+  },
+  "name": "snippets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC"
+}
