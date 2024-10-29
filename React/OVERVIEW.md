@@ -1,3 +1,13 @@
+# React Overview
+
+## React Libraries
+React is a library and not a framework.  Other libraries are often used to build a React app including:
+- Lodash - functional programming library
+- Luxon - time/date handler 
+- Redux - state manager
+- Axios - promise based HTTP client
+- Jest - JS testing framework
+
 ## React Lifecycle Methods (Class Components)
 - **constructor()** - Initializes state and binds event handlers.
 - **componentDidMount()** - Runs after the component is added to the DOM. Used for API calls or subscriptions.
