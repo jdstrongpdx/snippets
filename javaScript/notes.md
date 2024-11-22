@@ -29,10 +29,10 @@
 - BigInt looses math functionality an is normally used for Cryptography or DB access with large Ids
 
 ## Hoisting 
-- Variable and function declarations (not invocations/initilizaitons) are moved to the top of their containing scope during complilation
+- Variable and function declarations (not invocations/initializations) are moved to the top of their containing scope during compilation
 
 ## Loops
-- for..of => iterstes over the values of an iterable object (Arrays, Strings) => for (let character of characters){
+- for..of => iterates over the values of an iterable object (Arrays, Strings) => for (let character of characters){
 - for..in => iterates over all enumerable property keys of an object (Objects) => for (let character in characters)
 - forEach() => iterates over an Array - does not return anything => characters.forEach((character, index) => console.log(index, character))
 - includes() => if an array holds a given value => characters.includes('item')
