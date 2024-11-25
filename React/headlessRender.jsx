@@ -51,8 +51,7 @@ export default function Toggle({ children, onToggle = () => {}}) {
 export { ToggleContext }
 
 // ToggleButton.js
-
-export default function ToggleButton({ children }) {
+function ToggleButton({ children }) {
     const { toggle } = React.useContext(ToggleContext)
     
     return (
@@ -64,7 +63,7 @@ export default function ToggleButton({ children }) {
 
 // ToggleOff.js
 
-export default function ToggleOff({ children }) {
+function ToggleOff({ children }) {
     const { on } = React.useContext(ToggleContext)
     
     return on ? null : children
@@ -72,14 +71,14 @@ export default function ToggleOff({ children }) {
 
 // ToggleOn.js
 
-export default function ToggleOn({ children }) {
+function ToggleOn({ children }) {
     const { on } = React.useContext(ToggleContext)
     
     return on ? children : null
 }
 
 // ToggleDisplay.js
-export default function ToggleDisplay({ children }) {
+function ToggleDisplay({ children }) {
     const { on } = React.useContext(ToggleContext)
     // return the JSX function from the Parent with local state for Rendering
     return children(on)
@@ -91,8 +90,9 @@ import ToggleButton from "./ToggleButton"
 import ToggleOn from "./ToggleOn"
 import ToggleOff from "./ToggleOff"
 
-Toggle.Button = ToggleButton
-Toggle.On = ToggleOn
-Toggle.Off = ToggleOff
+// Commented out for file conflicts, but would retain for file:
+//Toggle.Button = ToggleButton
+//Toggle.On = ToggleOn
+//Toggle.Off = ToggleOff
 
-export default Toggle
+//export default Toggle
