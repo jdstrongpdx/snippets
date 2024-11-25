@@ -61,6 +61,19 @@ function App() {
     </Route>
 ```
 
+## Relative Links
+- instead of including full paths, you can use to with
+- '.' - current 'parent' route
+- '..' - previous 'parent' route
+- relative='path' - one path instead of parent route
+``` JavaScript
+    <Link
+        to=".."
+        relative="path"
+        className="back-button"
+    >&larr; <span>Back to all vans</span></Link>
+```
+
 ## Render Props
 - Allows highlighting of Link for current page
 - Uses NavLink instead of Link
@@ -72,4 +85,41 @@ function App() {
     // OR
     style={({isActive}) => isActive ? activeStyle : null }
 >
+
+// to prevent index from being active with nested routes, include end:
+    <nav className="host-nav">
+        <NavLink
+            to="/host"
+            end
+            style={({ isActive }) => isActive ? activeStyles : null}
+        >
+            Dashboard
+        </NavLink>
+    </nav>
 ```
+
+## Outlet Context 
+- outlet has its own context, so we can pass params to the outlet component via useOutletContext
+
+``` JavaScript
+// Calling component:
+    <Outlet context={{ currentVan }} />
+
+// Called component:
+    import React from "react"
+    import { useOutletContext } from "react-router-dom"
+
+    export default function HostVanInfo() {
+        const { currentVan } = useOutletContext()
+        
+        return (
+            <section>
+                <h4>Name: {currentVan.name}</h4>
+            </section>
+        )
+    }
+```
+
+## Search/Query Parameters
+- commonly used for sorting, filtering, pagination
+- useSearchParams
