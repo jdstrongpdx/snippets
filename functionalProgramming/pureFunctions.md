@@ -2,30 +2,30 @@
 
 ## Functions that return the same output for the same input and have no side effects (do not modify external state).
 
-## source: https://www.youtube.com/watch?v=poQXNp9ItL4
+[source: YouTube Video] (https://www.youtube.com/watch?v=poQXNp9ItL4)
 
 Requirements:
-    No random values
-    No current dates/times
-    No global state (DOM, files, db, etc)
-    No mutation of parameters - immutability
+- No random values
+- No current dates/times
+- No global state (DOM, files, db, etc)
+- No mutation of parameters - immutability
 
 Benefits:
-    Self-documenting code
-    Easily testable
-    Concurrency
-    Cacheable - if an intensive function is pure, you can cache the result to save on computation
+- Self-documenting code
+- Easily testable
+- Concurrency
+- Cacheable - if an intensive function is pure, you can cache the result to save on computation
 
 Immutability:
-    Predictability - the internal values do not change mid-function call
-    Change Detection - items with different memory locations are easy to track changes to each
-    Concurrency - immutable objects can be run concurrently with pure functions
-    Cons: Performance and Memory overhead
+- Predictability - the internal values do not change mid-function call
+- Change Detection - items with different memory locations are easy to track - changes to each
+- Concurrency - immutable objects can be run concurrently with pure functions
+- Cons: Performance and Memory overhead
 
 Immutable libraries
-    Lodash
-    Immutable - by Facebook
-    Immer - by Mobix
+- Lodash
+- Immutable - by Facebook
+- Immer - by Mobix
 
 ``` javaScript
 // Ways to copy an existing object

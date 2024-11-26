@@ -2,7 +2,7 @@
 
 ## Functions that take other functions as arguments or return them as results.
 
-## source: https://www.youtube.com/watch?v=poQXNp9ItL4
+[source: YouTube Video] (https://www.youtube.com/watch?v=poQXNp9ItL4)
 
 Examples - .map, setTimeout
 

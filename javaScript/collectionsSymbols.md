@@ -3,7 +3,7 @@
 - Map: an object where any data type can be used as a key
 - Set: classic sets
 
-# Symbols
+## Symbols
 - a primitive data type
 - an immutable identifier used as a property key
 - each symbol is unique

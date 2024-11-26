@@ -2,7 +2,7 @@
 
 # Take a function that takes n arguments and convert to functions with one argument
 
-## source: https://www.youtube.com/watch?v=poQXNp9ItL4
+[source: YouTube Video] (https://www.youtube.com/watch?v=poQXNp9ItL4)
 
 ``` javaScript
 

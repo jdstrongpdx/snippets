@@ -1,5 +1,12 @@
 # Objects
 
+## Objects
+- contains properties made out of key: value pairs
+- {} - Object Literal
+- var.property = value - dot notation to add a new property to the object
+- var.["property"] = value - bracket notation to add a new property to the object
+- var.func = function () {} - adding a object method 
+
 ## Three Ways of Creating Objects
 1. Factory functions
 2. Constructor functions
