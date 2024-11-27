@@ -28,6 +28,13 @@
 - 9_007_199_254_740_991n or BigInt(9_007_199_254_740_991)
 - BigInt looses math functionality an is normally used for Cryptography or DB access with large Ids
 
+## Value Types and Reference Types
+- Value types aka primitive types: booleans, numbers, strings, undefined
+    - equal if they have the same value and data type
+- Reference types aka complex types: objects, arrays, functions
+    - equal if they reference the same item in memory
+
+
 ## Hoisting 
 - Variable and function declarations (not invocations/initializations) are moved to the top of their containing scope during compilation
 

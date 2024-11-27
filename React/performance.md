@@ -58,7 +58,6 @@ const ProductsList = React.lazy(() => {
 ## Caching
 - useMemo - cache the result of 'expensive' calculations
 
-
 ``` JavaScript
   const productsCount = React.useMemo(() => {
     return slowCountItems(productsData, 500)
@@ -73,6 +72,25 @@ const ProductsList = React.lazy(() => {
 export default React.memo(GrandParent)
 ```
 
-## Avoid re-renders
+## Referential Equality
+- Reference types (objects, arrays, functions) are determined by reference - ie. a single memory location.  When creating/comparing two identical objects, if they are not the same item in memory, React will re-render
+- Solution: useMemo can maintain referential equality of a complex data type between renders
 
-## Restructure
+``` JavaScript
+    const style = React.useMemo(() => {
+        return {
+            backgroundColor: darkMode ? "#2b283a" : "#e9e3ff",
+            color: darkMode ? "#e9e3ff" : "#2b283a",
+        }
+    }, [darkMode])
+
+```
+
+## useCallback
+- useCallback can maintain reference to functions between renders
+
+``` JavaScript
+    const increment = React.useCallback(() => {
+        setCount(prevCount => prevCount + 1)
+    }, [setCount])
+```
