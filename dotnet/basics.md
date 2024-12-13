@@ -56,4 +56,51 @@
     - include a Readme.md file
     - comment when necessary and add decision explinations
 
+## .NET History
+- .NET Framework was released in 2002
+- .NET Core was released on 2016 focusing on cross-platform support, modular architecture, and cloud support
+- Unified .NET 5 was released in 2020 to combine Framework, Xamarin (Mobile), and Core
+- .NET 8 was released in 2023 and included Ahead-Of-Time compilation leading smaller, faster applications
+- Limitations - only runs on Windows OS, monolithic, lacks performance optimizations
 
+## .NET Framework
+- Common Language Runtime (CLR) allows code written in multiple languages to run as a single program
+- Base Class Library (BCL) provides a standard collection of classes, interfaces and value types for .NET development
+
+## .NET Platform
+- combined name for Core, Xamarin and Framework
+- cross-platform
+- controlled open-source
+- cloud services optimized
+
+## NuGet - Package Manager
+- Semantic Versioning - Major.Minor.Patch
+- Major changes are breaking changes for some features
+- Commonly used libraries
+    - Newtonsoft.Json - JSON parsing, de/serialization
+    - Dapper - lightweight, fast ORM for SQL
+    - Serilog - logging for errors, monitoring, log routing
+
+``` c#
+using System;
+using Newtonsoft.Json;
+public class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+}
+public class Program
+{
+    public static void Main()
+    {
+        // Deserialize JSON to Person object
+        string json = "{\"Name\": \"John Doe\", \"Age\": 30}";
+        Person person = JsonConvert.DeserializeObject<Person>(json);
+        Console.WriteLine($"Name: {person.Name}, Age: {person.Age}");
+        // Serialize Person object to JSON
+        Person newPerson = new Person { Name = "Ping Jeong", Age = 25 };
+        string newJson = JsonConvert.SerializeObject(newPerson);
+        Console.WriteLine($"Serialized JSON: {newJson}");
+    }
+}
+```

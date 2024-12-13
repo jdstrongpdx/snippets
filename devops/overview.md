@@ -55,6 +55,3 @@ Azure Pipelines configuration settings
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
 
 ```
-
-## Build Process using Azure Pipelines
-1. Take the build artifact
