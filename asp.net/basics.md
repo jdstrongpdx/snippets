@@ -36,6 +36,8 @@ Example Products app
 
 ## API examples
 ``` c#
+    // NOTE: IT IS BEST PRACTICE TO USE TypedResults CLASS FOR RETURN OBJECTS
+
     // with optional/default parameter
     app.MapGet("/users{id?}", (int int = 1) => $"Hello User {id}!");
 
@@ -65,6 +67,15 @@ Example Products app
         }
 
     });
+
+    // USING TypedResults
+    app.MapGet("/blogs/{id}", Results<OK<Blog>>, NotFound> (int id) => {
+        if (id < 0 || id >= blogs.Count) {
+            return TypedResults.NotFound();
+        } else {
+            return TypedResults.OK(blogs[id]);
+        }
+    })
 ```
 
 ## Server Refresh during development

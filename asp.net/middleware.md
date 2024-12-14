@@ -1,6 +1,47 @@
 # ASP.NET Middleware
 Enables additional request processing across different parts of our app instead of a single endpoint
 
+## Built-in Middleware Components
+- Authentication - UseAuthentication()
+- Routing - UseRouting()
+- Logging
+- Error Handling
+
+## Configuration
+- startup.cs - configures the middleware and services
+
+``` c#
+    // DevEnv Error Handling
+    app.UseDeveloperExceptionPage();
+    // Production Error handling
+    app.UseExceptionHandler("route/to/error/path");
+
+    // Authentication
+    // checks if logged in or not
+    app.UseAuthentication();
+
+    // Authorization
+    // checks if they have permission to access resources
+    app.UseAuthorization();
+
+    // Logging
+    builder.Services.AddHttpLogging(o=>{});
+    app.UseHttpLogging();
+    // You also need to modify your app settings.json file by adding the logging level:
+    "Microsoft.AspNetCore.HttpLogging.HttpLoggingMiddleware" : "Information"
+
+```
+
+## Pipeline
+1. Incoming Request
+2. Logging (user activity and resource being accessed)
+3. Authentication 
+4. Application logic middleware (performing controller task)
+5. Response generation
+
+## Custom Middleware
+- context - stores information about the request and response
+- next - request delegate for the next task in the pipeline
 ``` c#
 // CUSTOM MIDDLEWARE Example
 app.Use( async (context, next) => {
@@ -8,6 +49,23 @@ app.Use( async (context, next) => {
     await next.Invoke(); // call the endpoint function
     // Logic after endpoint call
 })
+
+// chain multiple app.Use here to define custom behavior
+
+// use middleware when... ex. api key is required for !GET
+app.UseWhen(
+    context => context.Request.Method != 'GET',
+    appBuilder => appBuilder.Use(async (context, next) => {
+        var extractedPassword = context.Request.Headers["X-API-Key"];
+        if (extractedPassword == "passwordFromEnvFile") {
+            await next.Invoke();
+        } else {
+            context.Response.StatusCode = 401;
+            await context.Response.WriteAsync("Invalid API Key")
+        }
+    })
+)
+
 ```
 
 ## Logging
@@ -18,18 +76,39 @@ Logging - the process of recording messages or data about an application or syst
 - Error tracking
 - User behavior analysis
 
-``` c#
-// add logging services
-builder.Services.AddHttpLogging((o)=>());
-// CONFIGURE logging threshold in appsettings.json
-// use logging services
-app.UseHttpLogging();
-```
-
 ## Logging Best Practices
 - Use the right level of detail 
 - Use consistent formatting 
 - Log scopes - organize and group related logs with extra information
+
+``` c#
+// Logging Example
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using System;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
+    logging.RequestBodyLogLimit = 4096;
+    logging.ResponseBodyLogLimit = 4096;
+});
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
+var app = builder.Build();
+
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+} else {
+    app.UseDeveloperExceptionPage();
+}
+```
 
 ## Logging Providers
 Built-in
@@ -137,4 +216,35 @@ Analyzing log data
             {ex.Message} // the exception message
         }
     })
+
+    // For more descriptive information, attach to the controller request
+        app.MapGet("/blogs/{id}", Results<OK<Blog>>, NotFound> (int id) => {
+        if (id < 0 || id >= blogs.Count) {
+            return TypedResults.NotFound();
+        } else {
+            return TypedResults.OK(blogs[id]);
+        }
+    }).WithOpenApi(operation => {
+        operation.Parameters[0].Description = "First parameter description";
+        operation.Summary = "Summary of route";
+        operation.Description = "Detailed description of the route";
+        return operation;
+    });
+```
+
+## OpenAPI 
+- A specification that documents how API's function - what valid requests and responses are.
+- Swagger - turns the OpenAPI documentation into an interactive solution for developers to explore the API.
+- Swashbuckle a namespace that contains Swagger in .NET
+- ! Incorrect documentation is worse than no documentation !
+
+``` c#
+    // install Microsoft.AspNetCore.OpenAPI & Swashbuckle.AspNetCore
+    builder.Services.AddEndpointExplorer();
+    builder.Services.AddSwaggerGen();
+
+    if (app.Environment.IsDevelopment()) {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 ```
