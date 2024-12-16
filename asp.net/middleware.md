@@ -39,6 +39,15 @@ Enables additional request processing across different parts of our app instead 
 4. Application logic middleware (performing controller task)
 5. Response generation
 
+## Routing
+- use Rewriter to redirect from one path to another
+
+``` c#
+    using Microsoft.AspNetCore.Rewrite;
+    app.UseRewriter(new RewriteOptions().AddRedirect("history", "about"));
+```
+
+
 ## Custom Middleware
 - context - stores information about the request and response
 - next - request delegate for the next task in the pipeline
@@ -182,20 +191,12 @@ Analyzing log data
     })
 ```
 
-## Unit Testing for code with DI
-- Mocking - creating simulated objects or services that replicate the behavior of real ones to isolate and test specific components
-1. Setup the test environment by configuring your component to use Mock services instead of real ones
-2. Configure a Mocking framework to simulate the external service
-    1. Install the mocking framework
-    2. Configure the mock service
-    3. Simulate the behavior of the external service
-    4. Inject the mock service into the component
-    5. Run the component with the mock service
-3. Write the unit test
-    1. Define the output conditions
-    2. Call the method on the component
-    3. Verify the component's output matches what was expected
-    4. Use a test runner to execute the test
+## DI Service Lifetimes
+When registering a service, you must choose a lifetime that is used in the app:
+- Singleton - a single instance of the service is created and used when called 
+- Scoped - created once per scope configuration and then disposed of (used for requesting specific data)
+- Transient - created once per call (use for lightweight stateless services)
+
 
 ## Using Global Exception Handling
 1. Add Global Exception Handling Middleware

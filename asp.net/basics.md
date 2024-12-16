@@ -93,12 +93,22 @@ Example Products app
 
 ``` c#
 // requests.http
-GET http://localhost:5251/weatherforecast
+### Define Variables
+@baseUrl = http://localhost
+@port = 8080
 
-###
+### Example POST Request with Body
+POST {{baseUrl}}:{{port}}/api/example
+Content-Type: application/json
 
-PUT http://localhost:5251/weatherforecast
+// optional body
+{
+  "username": "john_doe",
+  "email": "john.doe@example.com",
+  "password": "securePassword123"
+}
 
+// request divider
 ### 
 
 GET http://localhost:5251/search?q=findText&page=2
