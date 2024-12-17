@@ -87,3 +87,41 @@ public class Program
     }
 }
 ```
+
+# Compliance in cloud-native .NET 8 application
+Data classification is the process of identifying, categorizing, and protecting content according to its sensitivity or impact level.
+- End User Identifiable Information (EUII) - information used to identify an individual
+- End User Pseudonymous Identifiers (EUPI) - information that can be used to identify an individual when combined with other information.
+
+.NET uses Microsoft.Extensions.Compliance.Classification extension enables you to define DataClassification and DataClassificationAttribute properties.
+
+``` c#
+using Microsoft.Extensions.Compliance.DataClassification;
+
+public static DataClassification EUIIDataClassification {get;} = new DataClassification("EUIIDataTaxonomy", "EUIIData");
+
+public static DataClassification EUPDataClassification {get;} = new DataClassification("EUPDataTaxonomy", "EUPData");
+
+public class EUIIDataAttribute : DataClassificationAttribute
+{
+    public EUIIDataAttribute() : base(DataClassifications.EUIIDataClassification) { }
+}
+
+public class EUPDataAttribute : DataClassificationAttribute
+{
+    public EUPDataAttribute() : base(DataClassifications.EUPDataClassification) { }
+}
+
+// Model:
+public class User
+{
+    [EUIIData]
+    public string Name { get; set; }
+
+    [EUIIData]
+    public string Address { get; set; }
+
+    [EUPData]
+    public string UserId { get; set; }
+}
+```
