@@ -10,6 +10,16 @@
 4. Keep your tests focused: A common misconception is that tests are meant to cover code written by others. Ordinarily, your tests should cover only your code. For example, if you're using an open-source graphics library in your project, you don't need to test that library.
 5. Choose the right granularity: For example, if you're performing unit testing, an individual test shouldn't combine or test multiple functions or methods. Test each function separately and later write integration tests that verify that multiple components interact properly.
 
+## Functional Test Types
+1. Smoke Tests - Most basic functionality to test before moving further - Check that the website loads and returns a 200 
+2. Unit Tests - Low level tests that ensure each method works correctly
+3. Integration Tests - Different components work together - database, endpoints, etc...
+4. Regression Tests - Run after code changes to ensure changes did not break anything and pass all tests/build
+5. UI Tests - Check that the actions the user takes to perform a task produce the correct results
+6. Usability Tests - Performed by a person checking the usability characteristics of the software
+7. User Acceptance Tests - Performed by real end users to verify the desired behaviors are correctly developed 
+
+
 ## Test Commands
 ``` c#
 // build a configuration with testing
@@ -263,3 +273,138 @@ Tests to Implement:
 9. Continuous Integration/Continuous Deployment (CI/CD)
 - Automate the test suite execution on every code push.
 - Enforce test coverage thresholds for builds to pass.
+
+
+## Using Selenium for UI Testing
+Steps:
+1. Create an NUnit project that includes Selenium. The project will be stored in the directory along with the app's source code.
+2. Write a test case that uses automation to click the specified link. The test case verifies that the expected modal window appears.
+3. Use the id attribute we saved to specify the parameters to the test case method. This task creates a sequence, or series, of tests.
+4. Configure the tests to run on Chrome, Firefox, and Microsoft Edge. This task creates a matrix of tests.
+5. Run the tests and watch each web browser come up automatically.
+6. Watch Selenium automatically run through the series of tests for each browser.
+7. In the console window, verify that all the tests pass.
+
+``` c#
+    [TestFixture("Chrome")]
+    [TestFixture("Firefox")]
+    [TestFixture("Edge")]
+
+    public class HomePageTest
+    {
+        private string browser;
+        private IWebDriver driver;
+
+        // test constructor
+        public HomePageTest(string browser)
+        {
+            this.browser = browser;
+        }
+    }
+
+    [OneTimeSetUp]
+    public void Setup()
+    {
+        // Create the driver for the current browser.
+        switch(browser)
+        {
+            case "Chrome":
+            driver = new ChromeDriver(
+                Environment.GetEnvironmentVariable("ChromeWebDriver")
+            );
+            break;
+            case "Firefox":
+            driver = new FirefoxDriver(
+                Environment.GetEnvironmentVariable("GeckoWebDriver")
+            );
+            break;
+            case "Edge":
+            driver = new EdgeDriver(
+                Environment.GetEnvironmentVariable("EdgeWebDriver"),
+                new EdgeOptions
+                {
+                    UseChromium = true
+                }
+            );
+            break;
+            default:
+            throw new ArgumentException($"'{browser}': Unknown browser");
+        }
+    }
+
+    private IWebElement FindElement(By locator, IWebElement parent = null, int timeoutSeconds = 10)
+    {
+        // WebDriverWait enables us to wait for the specified condition to be true
+        // within a given time period.
+        return new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds))
+            .Until(c => {
+                IWebElement element = null;
+                // If a parent was provided, find its child element.
+                if (parent != null)
+                {
+                    element = parent.FindElement(locator);
+                }
+                // Otherwise, locate the element from the root of the DOM.
+                else
+                {
+                    element = driver.FindElement(locator);
+                }
+                // Return true after the element is displayed and is able to receive user input.
+                return (element != null && element.Displayed && element.Enabled) ? element : null;
+            });
+    }
+
+    private void ClickElement(IWebElement element)
+    {
+        // We expect the driver to implement IJavaScriptExecutor.
+        // IJavaScriptExecutor enables us to execute JavaScript code during the tests.
+        IJavaScriptExecutor js = driver as IJavaScriptExecutor;
+
+        // Through JavaScript, run the click() method on the underlying HTML object.
+        js.ExecuteScript("arguments[0].click();", element);
+    }
+
+    // THREE TEST CASES FOR MODALS TO APPEAR/DISAPPEAR 
+    // Download game
+    [TestCase("download-btn", "pretend-modal")]
+    // Screen image
+    [TestCase("screen-01", "screen-modal")]
+    // // Top player on the leaderboard
+    [TestCase("profile-1", "profile-modal-1")]
+    public void ClickLinkById_ShouldDisplayModalById(string linkId, string modalId)
+    {
+        // Skip the test if the driver could not be loaded.
+        // This happens when the underlying browser is not installed.
+        if (driver == null)
+        {
+            Assert.Ignore();
+            return;
+        }
+
+        // Locate the link by its ID and then click the link.
+        ClickElement(FindElement(By.Id(linkId)));
+
+        // Locate the resulting modal.
+        IWebElement modal = FindElement(By.Id(modalId));
+
+        // Record whether the modal was successfully displayed.
+        bool modalWasDisplayed = (modal != null && modal.Displayed);
+
+        // Close the modal if it was displayed.
+        if (modalWasDisplayed)
+        {
+            // Click the close button that's part of the modal.
+            ClickElement(FindElement(By.ClassName("close"), modal));
+
+            // Wait for the modal to close and for the main page to again be clickable.
+            FindElement(By.TagName("body"));
+        }
+
+        // Assert that the modal was displayed successfully.
+        // If it wasn't, this test will be recorded as failed.
+        Assert.That(modalWasDisplayed, Is.True);
+    }
+
+
+
+```
