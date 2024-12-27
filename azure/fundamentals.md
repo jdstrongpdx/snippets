@@ -8,8 +8,6 @@ Benefits
 2. Create custom dashboards
 3. Configure accessability options
 
-### Azure Marketplace
-
 ### How Azure Works
 - Virtualization via a Hypervisor - emulates the functions of a computer with abstracted hardware
     - Each server has a hypervisor
@@ -78,20 +76,20 @@ Organizing Structure
 - Resources - instances of services you create
 
 ### Management Groups
-    - A container for subscriptions that apply governance conditions/policies/limitations
-        - Create a hierarchy that applies a policy
-        - Provide user access to multiple subscriptions - Role-Based Access Control (RBAC)
-    - Structures
-        - Environments (Dev, Test, Prod)
-        - Organizational Structures (Team/Product/Division)
-        - Billing
-        - Subscription Limits (maximum resources for a single subscription set by Azure)
-    - Limits
-        - 10000 management groups per directory
-        - Management group tree up to 6 levels deep - not including root or resource
-        - Each management group and subscription can support only one parent
-        - Each group can have many children
-        - All subscriptions and management groups are within a single hierarchy in each directory
+- A container for subscriptions that apply governance conditions/policies/limitations
+    - Create a hierarchy that applies a policy
+    - Provide user access to multiple subscriptions - Role-Based Access Control (RBAC)
+- Structures
+    - Environments (Dev, Test, Prod)
+    - Organizational Structures (Team/Product/Division)
+    - Billing
+    - Subscription Limits (maximum resources for a single subscription set by Azure)
+- Limits
+    - 10000 management groups per directory
+    - Management group tree up to 6 levels deep - not including root or resource
+    - Each management group and subscription can support only one parent
+    - Each group can have many children
+    - All subscriptions and management groups are within a single hierarchy in each directory
 
 ### Subscriptions
 - at least one subscription is required
@@ -114,18 +112,47 @@ Organizing Structure
     - Organize by logical grouping for production environments
     - Organize by life cycle in non-production environments
     - Apply RBAC permissions to ease administration and limit access
-    
+
 - Azure Resource Manager (ARM): the deployment and management service for Azure
     - Create, Update, Delete resources
     - Access control locks, tags
     - Controls service access requests to ALL services via AUTH and then forwards the request to the service
     - ARM API's can be controlled through the Azure Portal, Azure PowerShell, Azure CLI, and REST clients
-    - Can use ARM Templates (json) to configure 
+    - Can use ARM Templates to configure to easily redeploy through the development lifecycle
+    - Benefits Overview
+        - Deploy resources
+        - Manage infrastructure
+        - Define dependencies
+        - Redeploy solutions
+        - Apply access control
+        - Apply tags 
+        - Clarify billing for resources with the same tag
 
 ### Resources 
 - DEF: a manageable item that's available through Azure VM or VM storage accounts - VMs, storage, web apps, databases, virtual networks...
 - 
 
+## Azure Regions
+- Azure Region: a geographical area that contains at least one data center.
+- Services that don't require a region: Active Directory, Traffic Manager, DNS
+- Regions allow
+    - Resources to be closer to the user
+    - Better scalability and redundancy
+    - Preserve data residency for your services
+    - Specialized regions for compliance purpose (DOD, GOVT)
+- Region Pairs: 
+    - Regions are always paired to provide redundancies from disasters, outages, and unrest
+    - Handle Azure Outages - one of the pairs is prioritized for bring back online
+    - Planned Updates - updates are rolled out to one region at a time
+    - Data resides within the same geographical pair for legal/compliance 
+
+## Availability Zones (AZ)
+- physically separate data centers within the same region to support redundancy 
+- run mission critical applications by co-locating your resources withing a zone and replicating it in other zones.
+- primarily used for VMs, managed disks, load balancers, and SQL databases
+- Categories of AZ
+    - Zonal services - you pin the resource to a specific zone
+    - Zone redundant services - replicates automatically across zones
 
 
 
