@@ -82,6 +82,8 @@
 ## Azure Logic Apps
 - Event driven execution of workflows that automate business scenarios and are built from predefined logic blocks.
 - 200 connectors and processing blocks to connect to different services.
+- Used for App, Data, System, Enterprise or B2B integration tasks
+- Works with Salesforce, SAP, Oracle DB and File Shares
 
 ## Windows Virtual Desktop
 - enables users to use a client hosted version of Windows from any location, most OS, and most modern web browsers.
