@@ -134,3 +134,33 @@ Your company has recently moved to Azure cloud services and believe it should be
 Which of the following provides a managed service hosted in the cloud that acts as a central message point for bi-directional communication between your IoT application and the devices it manages? - Azure IoT Hub
 
 Your company is developing a new IoT appliance that will be used to capture and transmit personal data back to a cloud service. Which of the following services can the company implement to ensure the highest level of security? - Azure Sphere
+
+Many Azure services include built-in security features however Azure also has specific tools to assist with securing your environment. Which of the following would be the simplest way to monitor your resources and perform automatic security assessments to identify potential vulnerabilities? - Azure Security Center
+
+Your company has migrated to Azure Cloud services. Management wants to implement security that will limit the applications that can run on certain virtual machines. Which of the following approaches provide such a solution? - Implement an application control rule in Azure Security Center
+
+Your company has recently migrated to Azure cloud services. Azure has various reporting and monitoring tools built in. What is the simplest tool to use to create a single report that will show all security information to be collected from all the monitoring tools? - Azure Sentinel
+
+Your company had recently migrated to Azure cloud services and management are concerned that sensitive information such as passwords, encryption keys, and certificates will not be as secure as they were when operating an on-premises environment. What solution can you implement to allay these concerns? - Azure Key Vault
+
+Your company is planning to migrate to Azure cloud services however because of their type of business they are obliged to follow regulatory compliance that requires them to be the only customer using the physical machine that will host their virtual machines in the cloud. How can your company migrate to the cloud while still remaining compliant? - use VMs on Azure Dedicated Host
+
+Malicious attackers can try to overwhelm the resources of a network by sending large volumes of packets to a targeted host on the network. Which of the following Azure offerings would be most suitable in detecting this form of attack? - Azure DDoS Protection
+
+Azure Firewall provides Network Address Translation (NAT) rules that can define destination IP addresses and ports to translate inbound requests. - True
+
+What service tiers are available to DDoS Protection? - Basic, Standard
+
+Having recently migrated to Azure cloud services you need to implement a solution that will allow the filtering of network traffic to and from Azure resources within an Azure Virtual Network. Which of the following services would be most suitable to solve this problem? - Network Security Groups
+
+What is the simplest way for a company to implement a policy that will restrict VMs from being able to communicate with each other? - Use Network Security Groups to prevent access from another VM on the same network
+
+Your company is considering moving to Azure cloud services; however, management wants assurances. Features such as Security Reporting, similar to their existing on-premises SIEM solution need to be available. Which of the following features can be implemented that will provide a cloud-based SIEM solution? - Azure Sentinel
+
+Tailwind Traders has recently migrated to Azure cloud services. Azure includes various built-in reporting and monitoring tools. What is the simplest tool to use to view groups of related security recommendations showing the percentage of security controls that the company currently satisfies? - Secure Score
+
+Many Azure services include built-in security features however Azure also has specific tools to assist with securing your environment. Which of the following would be the simplest way to centrally manage your passwords and certificates in a single, central location? - Azure Key Vault
+
+Having recently migrated to Azure cloud services, you need to implement a solution that will allow the monitoring of incoming and outgoing network traffic and, determine whether to allow or block specific traffic based on a defined set of security rules. Which of the following services would be most suitable to solve this problem? - Azure Firewall
+
+Which of the following services allows for the configuration of application rules that define fully qualified domain names (FQDNs) that can be accessed from a subnet? - Azure Firewall
