@@ -164,3 +164,56 @@ Many Azure services include built-in security features however Azure also has sp
 Having recently migrated to Azure cloud services, you need to implement a solution that will allow the monitoring of incoming and outgoing network traffic and, determine whether to allow or block specific traffic based on a defined set of security rules. Which of the following services would be most suitable to solve this problem? - Azure Firewall
 
 Which of the following services allows for the configuration of application rules that define fully qualified domain names (FQDNs) that can be accessed from a subnet? - Azure Firewall
+
+What is the process of establishing the identity of a person or service that wants to access a resource known as? - Authentication
+
+What kinds of resources can Azure AD help secure? - Both External and Internal
+
+Single sign-on enables a user to sign in one time and use that credential to access multiple resources and applications from different providers. - True
+
+Multi-factor authentication is a process where a user is prompted during the sign-in process for an additional form of identification. A code that's sent to your mobile phone is an example of which type of multi-factor authentication? - Something you have
+
+Your company wants to ensure that certain content is only accessible from specific locations. Which of the following solutions is the most suitable to meet this requirement? - Conditional Access
+
+Multi-factor authentication is a process where a user is prompted during the sign-in process for an additional form of identification. Using a fingerprint matches which of the following? - Something you are.
+
+Your company wants to implement a facial recognition system to manage access to certain areas of the building. Which of the following solutions can enable this? - Multifactor Authentication
+
+What is the process of establishing the level of access a person or service has known as? - Authorization
+
+Your company has migrated to Azure cloud services and the development team has deployed several new applications for internal use. Users are now complaining about the number of times they are asked to authenticate as they move between different applications. Which of the following solutions can be implemented to reduce this requirement? - Single Sign On (SSO)
+
+Your company has migrated to Azure cloud services and management wish to chargeback some of the resource cost to various departments on a monthly basis. Which in your opinion is the best solution to meet these requirements with the least amount of administrative effort? - Tags
+
+Your Azure deployment consists of multiple subscriptions and resourcegroups. You need to restrict the actions that some of your users can carry out. You are required to allow some users to manage VM’s without having permission to make configuration changes to networking etc. Which of the following solutions allow you to do this? - Azure AD Role Based Access Control (Azure RBAC)
+
+Resource Locks in Azure cloud services prevent accidental changes or deletions. Which of the following are valid options when configuring Resource Locks? - ReadOnly, CanNotDelete
+
+Azure Policy initiatives are a way of grouping related policies into one set - True
+
+An Azure Blueprint is composed of artifacts. Which of the following resources as artifacts are currently supported by Azure Blueprints? - Role Assignment, ARM Templates, Policy Assignment
+
+Tags provide extra information, or metadata, about your resources. What is the easiest way to apply tags to resources that reside within a Resource Group? - Create an Azure Policy
+
+
+Azure Virtual machines come in different SKU sizes and cost. Your company want to limit the choices available to users when creating new virtual machines to ensure that they only deploy cost-effective virtual machine sizes. What do you think is the best way of doing this? - Create an Azure Policy with preferred SKU Sizes
+
+When you grant access at a parent RBAC scope, those permissions are inherited by all child scopes. - True
+
+Which of the following is a legal agreement between Microsoft and the customer that details the obligations by both parties with respect to the processing and security of customer data and personal data? - Online Service Terms
+
+Which of the following provides in-depth information about security, privacy, compliance offerings, policies, features, and practices across Microsoft cloud products? - Microsoft Trust Center
+
+To provide the highest level of security and compliance, Azure Government uses physically isolated datacenters and networks located only in the US. - True
+
+Azure China is operated by 21Vianet and is a physically separated instance of cloud services located in China. - True
+
+Where can the team access details about the personal data Microsoft processes and how the company processes it, including for Cortana? - Microsoft Privacy Statement
+
+Which of the following is a legal agreement between Microsoft and the customer that details the obligations by both parties with respect to the processing and security of customer data and personal data? - Online Services Terms
+
+The US Government has access to datacenters and networks that are physically isolated from the standard Azure Cloud Services provided by Microsoft. - True
+
+Which of the following provides the ability for analyses of configurations and usage telemetry and offers personalized, actionable recommendations? - Azure Advisor
+
+Which of the following explains what personal data Microsoft collects, how it is used by them and for what purposes? - Microsoft Privacy Policy
