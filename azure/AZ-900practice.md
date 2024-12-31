@@ -217,3 +217,21 @@ The US Government has access to datacenters and networks that are physically iso
 Which of the following provides the ability for analyses of configurations and usage telemetry and offers personalized, actionable recommendations? - Azure Advisor
 
 Which of the following explains what personal data Microsoft collects, how it is used by them and for what purposes? - Microsoft Privacy Policy
+
+Your company is planning on migrating to Azure cloud services. However, before this happens management requires some comparisons of the costs involved in using cloud services as opposed to an on-premises solution. What would be the first step you could take to provide this comparison information? - Use the Total Cost of Ownership Calculator
+
+You work for a large manufacturing company and are planning on moving to Azure cloud services. You want to avail of the best pricing Microsoft has to offer on their Azure services. Which Azure service should you purchase? - An Enterprise Agreement
+
+Your company’s development team create virtual machines for testing on a regular basis. These test machines are only used during certain times. In your opinion what is the most efficient way to save costs on virtual machines when they are not in use? - Deallocate VMs when not in use
+
+Azure Advisor helps you identify unused or under-utilized resources and can recommend unused resources that you can remove. - True
+
+If you have a free trial subscription to Azure and you reach your credit limit during the trial period, what will happen to your resources? - Your resources are removed from production and VMs stopped and deallocated
+
+A service-level agreement (SLA) is a formal agreement between a service company and the customer. On Azure, this agreement defines the performance standards that Microsoft commits to for you, the customer. However, in order to view an SLA, you must have an Azure Subscription. - False
+
+Downtime refers to the time duration that the service is unavailable, how much cumulative downtime per year will an SLA percentage of 99.95 give? - 4.38 hours
+
+Azure cloud services continue to release new features. Prior to release these new services go through various stages of testing such as pre-release and Beta. Which of the following will allow all Azure customers an opportunity to test the beta and other pre-release features? - Public Preview
+
+Which of the following define performance targets such as uptime? - Service Level Agreements
