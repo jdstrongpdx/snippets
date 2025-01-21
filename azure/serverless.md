@@ -1,0 +1,96 @@
+# Azure Serverless options
+- Azure Logic Apps 
+    - design-first approach for developers (custom connectors like a database)
+    - use to automate, orchestrate, and integrate disparate components of a distributed application
+- Microsoft Power Automate 
+    - design-first approach for non-developers
+    - use to create workflows when you have no development experience
+- Azure App Service WebJobs 
+    - code-first approach
+    - integrates with App Service or Job Host
+    - Pay for a VM or App Service Plan
+- Azure Functions 
+    - code-first approach
+    - Pay only when the function runs
+    - easier integration with Logic Apps
+    - event-driven, stateless or stateful using storage service
+    - timeouts - http request @ 2.5 min, else 5-10 min max.  Can use durable functions without timeouts
+    - calling frequency - one per 10 seconds 
+
+## Azure Functions Triggers
+- Timer - needs a init timestamp and a CRON
+    - CRON Expression - syntax for setting time triggers
+- HTTP - when an HTTP request is received
+    - Customized triggers - API keys for access, HTTP Verb restrictions, query string params, routing templates
+    - Authorization Levels - Anonymous (no API key), and Function, Admin (API key required)
+    - Authorization Keys - function key (specific to a function) or host keys (access to all functions - required for Admin Auth Level)
+- Blob - when a file is uploaded or updated in Azure Blob Storage
+    - Blob Types
+        - Block blobs - stores binary or text
+        - Append blobs - appends to existing blob (like a log file)
+        - Page blobs - made of pages for frequent random r/w operations
+    - Blob Trigger Path - the path to the blob that is monitored for the trigger
+- Common Functions Trigger Types
+    - Queue - a message is added to an Azure Storage Queue
+    - Azure Cosmos DB - when a document changes in a collection
+    - Event Hub - when Event Hub receives a new event
+
+## Azure Functions Input/Output Bindings
+- an optional connection to data within your function
+- stored in json in function.json
+- Required Properties
+    - Name - defines the function parameter you access the data from
+    - Type - data type or service
+    - Direction - input or output
+    - Connection? - connection string
+- Common input and output binding types
+    - Blob Storage
+    - Azure Service Bus Queues
+    - Azure Cosmos DB
+    - Azure Event Hubs
+    - External Files
+    - External Tables
+    - HTTP Endpoints
+- Reading input data - input bindings
+
+## Azure Durable Functions
+- long lasting, stateful functions
+- Types:
+    - Client - entry point functions, event driven written in many languages
+    - Orchestrator - describe how actions are executed written in C#, JS
+    - Activity - basic units of work
+- Workflow Patterns:
+    - Function Chaining
+    - Fan out/fan in - Func1 starts multiple other functions and waits for them to complete to compute a final result.
+    - Async HTTP APIs
+    - Monitor - monitor something until a certain condition is met
+    - Human Interaction - i.e. approval process
+- Features:
+    - Event driven, can perform asynchronous awaits
+    - Function chaining
+    - Function coordination (order in which they are performed)
+    - Managed state
+    - Good for custom workflows
+- Orchestration Function:
+    - Define code based workflows
+    - Synchronous and Asynchronous function calls
+    - Output from functions is saved locally and available to other functions
+    - Checkpoints - functions waiting for a long time can be dehydrated, saved, and rehydrated when needed
+- Function Timers
+    - provide a time limit for a task to complete and an escalation step if not
+    - Use in place of JS setInterval() or setTimeout() calls
+    - Use currentUtcDateTime to obtain the current date and time, instead of Date.now or Date.UTC
+
+## Azure Functions Core Tools
+- A set of cmd line tools to develop and test Azure functions on your local computer.
+- Used to create, modify, run, test, publish, and invoke Azure Functions
+- Function App (used for portal dev)
+    - Share common config values
+    - Share language runtime
+    - Functions configured and managed independently 
+- Functions project (used for local dev)
+    - Local code and config files
+    - Function app equivalent
+    - Code must be correctly structured and created
+        - host.json - stores runtime config values used locally and on Azure
+        - localsettings.json - settings used only locally
