@@ -1,5 +1,28 @@
 ## Azure Cosmos DB Developer Specialty Notes
 
+NOTE: Use CosmicWorks to generate example Employee, Product, and Category data for sample applications: https://www.nuget.org/packages/cosmicworks 
+
+Schema Creation:
+Embed in the same document when:
+- Read or updated together: Data that's read or updated together is nearly always modeled as a single document. This reduces the number of requests which is our objective in being efficient. In our scenario, all of the customer entities are read or written together.
+- 1:1 relationship: For example, Customer and CustomerPassword have a 1:1 relationship.
+- 1:Few relationship: In a NoSQL database, it's necessary to distinguish 1:Many relationships as bounded or unbounded. Customer and CustomerAddress have a bounded 1:Many relationship because customers in an e-commerce application normally have only a handful of addresses to ship to. When the relationship is bounded, this is a 1:Few relationship.
+
+Reference data as separate documents when:
+
+- Read or updated independently: This is especially true where combining entities that would result in large documents. Updates in Azure Cosmos DB require the entire item to be replaced. If a document has a few properties that are frequently updated alongside a large number of mostly static properties, it's much more efficient to split the document into two. One document then contains the smaller set of properties that are updated frequently. The other document contains the static, unchanging values.
+- 1:Many relationship: This is especially true if the relationship is unbounded. If you have a document which increases in size an unknown or unlimited amount of times, the cost and latency for those updates will keep increasing. This is due to the increasing size of the update costing more RU/s and the payloads going over the network which itself, is also inefficient.
+- Many:Many relationship: We'll explore an example of this relationship in a later unit with product tags.
+- Separating these properties reduces throughput consumption for more efficiency. It also reduces latency for better performance.
+
+CosmosDb Consistency Sliding Scale:
+- **Strong** - Linear consistency. Data is replicated and committed in all configured regions before acknowledged as committed and visible to all clients.
+- **Bounded Staleness** - Reads lag behind writes by a configured threshold in time or items.
+- **Session** - Within a specific session (SDK instance), users can read their own writes.
+- **Consistent Prefix** - Reads may lag behind writes, but reads will never appear out of order.
+- **Eventual** - Reads will eventually be consistent with writes.
+
+
 CREATE ONE: 
 ``` C#
     // Basic Create
@@ -101,4 +124,71 @@ DELETE:
 
     // Or delete all entries with a categoryId
     await container.DeleteAllItemsByPartitionKeyStreamAsync<(partitionKey);
+```
+
+QUERIES, PRAMS, PAGINATION, AND ITERATION
+``` C#
+    // SQL syntax
+    string sql = "SELECT p.name, t.name AS tag FROM products p JOIN t IN p.tags WHERE p.price >= @lower AND p.price <= @upper"
+    
+    // Query Prams
+    QueryDefinition query = new (sql)
+        .WithParameter("@lower", 500)
+        .WithParameter("@upper", 1000);
+    QueryDefinition query = new (sql);
+
+    // Pagination
+    QueryRequestOptions options = new ();
+    options.MaxItemCount = 50;
+
+    // NoSQL Call
+    FeedIterator<Product> iterator = container.GetItemQueryIterator<Product>(query, requestOptions: options);
+
+    // Iterate Results
+    while (iterator.HasMoreResults)
+    {
+        FeedResponse<Product> products = await iterator.ReadNextAsync();
+        foreach (Product product in products)
+        {
+            Console.WriteLine($"[{product.id}]\t[{product.name,40}]\t[{product.price,10}]");
+        }
+
+        Console.WriteLine("Press any key for next page of results");
+        Console.ReadKey();        
+    }
+
+```
+
+MODIFYING THE INDEXING STRATEGY FOR A CONTAINER
+``` C#
+    // Create IndexingPolicy
+    IndexingPolicy policy = new ()
+    {
+        IndexingMode = IndexingMode.Consistent,
+        Automatic = true
+    };
+
+    // Excluded Paths
+    policy.ExcludedPaths.Add(
+        new ExcludedPath{ Path = "/*" }
+    );
+
+    // Included Paths
+    policy.IncludedPaths.Add(
+        new IncludedPath{ Path = "/name/?" }
+    );
+    policy.IncludedPaths.Add(
+        new IncludedPath{ Path = "/categoryName/?" }
+    );
+
+    // Configure Container Properties including IndexingPolicy
+    ContainerProperties options = new ()
+    {
+        Id = "products",
+        PartitionKeyPath = "/categoryId",
+        IndexingPolicy = policy
+    };
+
+    // Create the container
+    Container container = await database.CreateContainerIfNotExistsAsync(options, throughput: 400);
 ```
