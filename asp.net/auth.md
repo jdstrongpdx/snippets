@@ -58,6 +58,180 @@
 - header - contains 'alg' for algorithm type and 'typ' for JWT type
 - payload - information about the token (id, username, roles, exp)
 - signature - "hash" of the header, payload, and secret key
+- common elements
+    - sub - subscriber/id
+    - name - username
+    - iat - issued at time
+    - exp - expiration time
+    - aud - audience
+    - iss - issuer
+    - scope - scope for the jwt
+    - role - user roles
+    - claim - user claims
+
+## JWT Authentication
+1. User Login
+2. Token Creation
+3. API request is included with requests
+4. Token Validation (Middleware)
+    - Middleware - checks users with valid tokens and roles
+    - Bearer schema - request is sent with a Bearer JWT
+    - Securing API routes based on Roles or Claims (Key: Value)
+    
+
+## JWT Best Practices
+- Safety
+    1. Token expiration - 15 to 60 minutes for standard token (or shorter)
+    2. Refresh tokens - clients can renew JWT without re-authentication 
+    3. Store tokens in HTTP-Only cookies to prevent XSS attacks
+    4. Refresh tokens should have the minimum permissions (no roles/claims)
+    5. Secure signing algorithms (SHA256)
+    6. Keep secret key safe (environment variables or Key Vault)
+    7. Encrypt JWT claims for private data
+- Performance
+    1. Use caching for token validation
+    2. Reduce token size using only essential data
 
 
-## See documentation or class content for usage examples
+## Example JWT Setup Code 
+``` C#
+    // Program.cs
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Text;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    var secretKey = "SuperSecretKeyForJwtTokenAuthorization123456789"; // Use an environment variable in production
+    var key = Encoding.ASCII.GetBytes(secretKey);
+
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero // Default is 5 minutes
+        };
+    });
+
+    builder.Services.AddControllers();
+
+    var app = builder.Build();
+
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+
+    // AuthController.cs
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.IdentityModel.Tokens;
+
+    [ApiController]
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
+    {
+        private static readonly Dictionary<string, string> Users =
+            new() { { "user1", "password1" }, { "admin", "password2" } };
+
+        private readonly string secretKey = "SuperSecretKeyForJwtTokenAuthorization123456789";
+        private static readonly Dictionary<string, string> RefreshTokens = new();
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
+        {
+            if (!Users.TryGetValue(request.Username, out var password) || password != request.Password)
+                return Unauthorized();
+
+            var accessToken = GenerateAccessToken(request.Username);
+            var refreshToken = GenerateRefreshToken();
+
+            // Store the refresh token
+            RefreshTokens[refreshToken] = request.Username;
+
+            return Ok(new { AccessToken = accessToken, RefreshToken = refreshToken });
+        }
+
+        [HttpPost("refresh")]
+        public IActionResult Refresh([FromBody] RefreshTokenRequest request)
+        {
+            if (!RefreshTokens.TryGetValue(request.RefreshToken, out var username))
+                return Unauthorized("Invalid refresh token.");
+
+            // Invalidate the old refresh token
+            RefreshTokens.Remove(request.RefreshToken);
+
+            // Generate a new access token and refresh token
+            var newAccessToken = GenerateAccessToken(username);
+            var newRefreshToken = GenerateRefreshToken();
+
+            // Store the new refresh token
+            RefreshTokens[newRefreshToken] = username;
+
+            return Ok(new { AccessToken = newAccessToken, RefreshToken = newRefreshToken });
+        }
+
+        private string GenerateAccessToken(string username)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(secretKey);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, username) }),
+                Expires = DateTime.UtcNow.AddMinutes(2),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature
+                ),
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            return Guid.NewGuid().ToString();
+        }
+    }
+
+    public class LoginRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+
+    public class RefreshTokenRequest
+    {
+        public string RefreshToken { get; set; }
+    }
+
+    // SecureController.cs
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Authorization;
+
+    [ApiController]
+    [Route("api/secure")]
+    public class SecureController : ControllerBase
+    {
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetSecureData()
+        {
+            return Ok(new { Message = "This is a secure endpoint." });
+        }
+    }
+```
