@@ -1,21 +1,44 @@
 # Basic .NET Security
 
+## Security Fundamentals
+- Access
+    - Use Scopes, RBAC, and Claims to limit user access based on the Least Privilege Principle
+    - Implement secure Auth handling
+        - Limit token TTL times
+        - Limit access to refresh tokens with HttpOnly cookies
+    - Use Data Masking and Obfuscation to replace/hide sensitive data during development or to limit access
+    - Test and Audit access regularly
+- Data at Rest
+    - Encrypt data at rest
+    - Use compliance features to ensure correct implementations and handling
+    - Redundant data storage
+- Data in Transit
+    - Use TLS, HTTPS to encrypt and secure data in transit between the application and the user
+    - Use VPN for development and communication work between employees
+- Coding
+    - Keys
+        - Securely store keys and limit access to them
+        - Rotate Keys on a regular interval
+        - Use strong and random key generators
+    - Perform input Validation
+        - Prevents SQL injection
+        - Prevents Cross-Site Scripting (XSS) Attacks - attackers inject malicious scripts into web pages which are executed in users' browsers - Can steal data, hijack user sessions, or perform unauthorized actions
+    - Secure coding standards
+        - OWASP Top 10
+        - Use trusted libraries (like bcrypt for passwords)
+        - Regular code reviews and automated testing 
+        - Penetration testing 
+
 ## .NET Security
 - Deserialization Attacks: Untrusted data in the deserialization process can allow malicious code execution, putting the entire application at risk. Attackers may exploit vulnerabilities by sending unexpected data types or harmful code, potentially gaining unauthorized access or control.
-
 - Data Tampering: Serialized data can be intercepted and altered if transmitted over unsecured channels, compromising data integrity. This tampering might result in altered records, unauthorized transactions, or other security breaches.
-
 - Exposure of Sensitive Information: Confidential data, such as user passwords or identifiers, can be accidentally exposed when included in serialized objects and shared or stored insecurely. Without proper handling, attackers can exploit serialized data to access sensitive information.
 
 ## Security Best Practices
 - Validate and Sanitize Inputs: Ensuring incoming data is validated and sanitized before deserialization reduces the risk of data corruption or harmful code execution.
-
 - Use Secure Serialization Libraries: Rely on libraries with built-in security features and keep them updated to minimize exposure to known vulnerabilities.
-
 - Avoid Deserializing Untrusted Data: Only deserialize data from verified, trusted sources, as untrusted sources may contain harmful elements designed to exploit application vulnerabilities.
-
 - Implement Access Controls: Limit access to serialized data through role-based access control (RBAC), ensuring only authorized users can access or modify sensitive data.
-
 - Encrypt Sensitive Data and Perform Integrity Checks: Encrypt data before serialization to prevent unauthorized access. Data integrity checks, such as hashing or digital signatures, help confirm that data remains unaltered during transmission.
 
 ## Data Protection
@@ -84,9 +107,22 @@
 - data scrambling - format and structure are preserved 
 - code obfuscation - modifies software code to make it difficult to understand while retaining code (prevents reverse engineering)
 
-## Masking vs Obfuscation
+## Masking vs Obfuscation Key Points
 - Masking: replaces data with realistic fakes
 - Obfuscation: transforms real data into an unreadable format
+
+## Data Storage Security Best Practices
+1. Encryption of Data at Rest
+2. Access Control
+3. Redundancy
+
+## Data in Transit Best Practices - TLS, VPN
+1. Transport Layer Security - TLS - data encryption over the internet
+2. Secure Socket Layer - SSL - outdated due to security concerns - replaced by TLS
+3. VPN - secure encrypted tunnel between devices, hides IP addresses, access to geo spoofing 
+4. Network protections
+    - Firewalls
+    - Intrusion Detection System (IDS)
 
 ``` c#
     // Basic SHA based encryption/decryption 
@@ -156,6 +192,138 @@
             return JsonSerializer.Deserialize<User>(jsonData);
         }
     }
+```
+
+``` C#
+    // AES Encryption/Decryption Service
+
+    // DataStorage.cs
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+
+    namespace SecureDataApp
+    {
+        public class SecureStorage
+        {
+            private string _encryptedData;
+
+            public void StoreData(string data, byte[] key, byte[] iv)
+            {
+                _encryptedData = Convert.ToBase64String(Encrypt(data, key, iv));
+            }
+
+            public string RetrieveData(User user, byte[] key, byte[] iv)
+            {
+                if (user.Role != "Admin")
+                    throw new UnauthorizedAccessException("Access denied. Admin role required.");
+
+                return Decrypt(Convert.FromBase64String(_encryptedData), key, iv);
+            }
+
+            private static byte[] Encrypt(string data, byte[] key, byte[] iv)
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Key = key;
+                    aes.IV = iv;
+                    ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+
+                    using (var ms = new System.IO.MemoryStream())
+                    using (var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (var writer = new System.IO.StreamWriter(cs))
+                        {
+                            writer.Write(data);
+                        }
+                        return ms.ToArray();
+                    }
+                }
+            }
+
+            private static string Decrypt(byte[] data, byte[] key, byte[] iv)
+            {
+                using (Aes aes = Aes.Create())
+                {
+                    aes.Key = key;
+                    aes.IV = iv;
+                    ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+
+                    using (var ms = new System.IO.MemoryStream(data))
+                    using (var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
+                    using (var reader = new System.IO.StreamReader(cs))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+            }
+        }
+    }
+
+    // User.cs
+    namespace SecureDataApp
+    {
+        public class User
+        {
+            public string Username { get; set; }
+            public string Role { get; set; }
+        }
+    }
+
+    // Program.cs
+    using System;
+
+    namespace SecureDataApp
+    {
+        class Program
+        {
+            static void Main(string[] args)
+            {
+                // Create users
+                var admin = new User { Username = "AdminUser", Role = "Admin" };
+                var user = new User { Username = "BasicUser", Role = "User" };
+
+                // Initialize SecureStorage and set up encryption
+                var storage = new SecureStorage();
+                byte[] encryptionKey;
+                byte[] initializationVector;
+
+                using (var aes = System.Security.Cryptography.Aes.Create())
+                {
+                    aes.GenerateKey();
+                    aes.GenerateIV();
+                    encryptionKey = aes.Key;
+                    initializationVector = aes.IV;
+
+                    // Store encrypted data
+                    storage.StoreData("Sensitive Information", aes.Key, aes.IV);
+                }
+
+                // Attempt to retrieve data as Admin
+                try
+                {
+                    string adminData = storage.RetrieveData(admin, encryptionKey, initializationVector);
+                    Console.WriteLine($"Admin Access: {adminData}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Admin Error: {ex.Message}");
+                }
+
+                // Attempt to retrieve data as Basic User
+                try
+                {
+                    string userData = storage.RetrieveData(user, encryptionKey, initializationVector);
+                    Console.WriteLine($"User Access: {userData}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"User Error: {ex.Message}");
+                }
+            }
+        }
+    }
+
 ```
 
 # Compliance in cloud-native .NET 8 application
