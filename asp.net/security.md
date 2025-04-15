@@ -27,7 +27,24 @@
         - OWASP Top 10
         - Use trusted libraries (like bcrypt for passwords)
         - Regular code reviews and automated testing 
-        - Penetration testing 
+        - Penetration testing
+    - Protect against repeated failed logins
+
+## API Best Practices
+- KISS - Keep it simple stupid - an API should do one thing and do it well
+- Filter, order, and paginate - deliver in data in appropriate pieces library/books/author/...
+- Versioning - use versioning for your APIs and support a max of 2 versions
+- Cache commonly called data to prevent unnecessary db calls
+- Rate Limiting - limit requests to prevent breaches and crawling
+- Monitoring - monitor 400 and 500 level codes as well as bandwidth
+
+## API Security Best Practices
+- SSL/TLS for HTTPS encryption
+- Signed URLs to make sure api is coming from an approved source (HMAC signiture)
+- Token-based authentication
+- CORS
+- Firewalls
+- RBAC with principle of minimum 
 
 ## .NET Security
 - Deserialization Attacks: Untrusted data in the deserialization process can allow malicious code execution, putting the entire application at risk. Attackers may exploit vulnerabilities by sending unexpected data types or harmful code, potentially gaining unauthorized access or control.
