@@ -12,3 +12,10 @@ const domNode = document.getElementById("root")
 const root = ReactDOM.createRoot(domNode)
 root.render(<App />)
 ```
+
+``` js
+	setUserInput(prev => ({...prev, [event.target.name]: event.target.value }))
+```
+
+https://www.coursera.org/learn/react-js-challenges/ungradedWidget/eVyk3/word-power-challenge
+
